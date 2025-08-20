@@ -4,13 +4,14 @@ phases:
   install:
     commands:
       - echo Installing NGINX
-      - sudo apt-get update
-      - sudo apt-get install nginx -y
+      - yum update -y
+      - amazon-linux-extras enable nginx1
+      - yum install -y nginx
 
   build:
     commands:
       - echo Build started on `date`
-      - cp index.html /var/www/html/
+      - cp index.html /usr/share/nginx/html/
 
   post_build:
     commands:
@@ -18,9 +19,9 @@ phases:
 
 artifacts:
   files:
-    - /var/www/html/index.html
+    - /usr/share/nginx/html/index.html
 
-
+ 
 
 
 # version: 0.2
