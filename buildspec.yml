@@ -4,14 +4,12 @@ phases:
   install:
     commands:
       - echo Installing NGINX
-      - yum update -y
-      - amazon-linux-extras enable nginx1
-      - yum install -y nginx
+      - apt-get update -y
+      - apt-get install -y nginx
 
   build:
     commands:
       - echo Build started on `date`
-      # index.html source मधून build output directory मध्ये copy करा
       - mkdir -p output
       - cp index.html output/
 
@@ -22,6 +20,8 @@ phases:
 artifacts:
   files:
     - output/index.html
+
+ 
 
 
  
