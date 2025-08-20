@@ -11,7 +11,9 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - cp index.html /usr/share/nginx/html/
+      # index.html source मधून build output directory मध्ये copy करा
+      - mkdir -p output
+      - cp index.html output/
 
   post_build:
     commands:
@@ -19,7 +21,7 @@ phases:
 
 artifacts:
   files:
-    - index.html
+    - output/index.html
 
 
  
