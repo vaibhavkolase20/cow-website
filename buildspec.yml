@@ -15,11 +15,12 @@ phases:
 
   post_build:
     commands:
-      - echo Configuring NGINX
+      - echo Build completed on `date`
 
 artifacts:
   files:
-    - /usr/share/nginx/html/index.html
+    - index.html
+
 
  
 
