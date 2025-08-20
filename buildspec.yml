@@ -2,10 +2,11 @@ version: 0.2
 
 phases:
   install:
-    commands:
-      - echo Installing NGINX
-      - apt-get update -y
-      - apt-get install -y nginx
+  commands:
+    - yum update -y
+    - amazon-linux-extras enable nginx1
+    - yum install -y nginx
+
 
   build:
     commands:
@@ -20,6 +21,7 @@ phases:
 artifacts:
   files:
     - output/index.html
+
 
  
 
