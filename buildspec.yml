@@ -3,11 +3,36 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Install phase started"
+      - echo Installing NGINX
+      - sudo apt-get update
+      - sudo apt-get install nginx -y
+
   build:
     commands:
-      - echo "Build phase started - no build needed for static site"
+      - echo Build started on `date`
+      - cp index.html /var/www/html/
+
+  post_build:
+    commands:
+      - echo Configuring NGINX
 
 artifacts:
   files:
-    - '**/*'
+    - /var/www/html/index.html
+
+
+
+
+# version: 0.2
+
+# phases:
+#   install:
+#     commands:
+#       - echo "Install phase started"
+#   build:
+#     commands:
+#       - echo "Build phase started - no build needed for static site"
+
+# artifacts:
+#   files:
+#     - '**/*'
