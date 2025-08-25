@@ -2,25 +2,27 @@ version: 0.2
 
 phases:
   install:
-  commands:
-    - yum update -y
-    - amazon-linux-extras enable nginx1
-    - yum install -y nginx
-
+    runtime-versions:
+      python: 3.9   # (runtime define करणे चांगली पद्धत आहे, इथे Python example दिला)
+    commands:
+      - echo "Installing NGINX"
+      - apt-get update -y
+      - apt-get install -y nginx
 
   build:
     commands:
-      - echo Build started on `date`
-      - mkdir -p output
-      - cp index.html output/
+      - echo "Build started on $(date)"
+      - cp index.html /var/www/html/
 
   post_build:
     commands:
-      - echo Build completed on `date`
+      - echo "Configuring NGINX"
+      - nginx -t     # (configuration check करण्यासाठी)
+      - systemctl restart nginx  # (nginx restart करण्यासाठी)
 
 artifacts:
   files:
-    - output/index.html
+    - '**/*'
 
 
  
