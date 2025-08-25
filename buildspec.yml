@@ -18,7 +18,7 @@ phases:
     commands:
       - echo "Configuring NGINX"
       - nginx -t     # (configuration check करण्यासाठी)
-      - systemctl restart nginx  # (nginx restart करण्यासाठी)
+      
 
 artifacts:
   files:
