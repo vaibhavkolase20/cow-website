@@ -1,46 +1,46 @@
-# version: 0.2
-
-# phases:
-#   install:
-#     runtime-versions:
-#       python: 3.9   # (runtime define करणे चांगली पद्धत आहे, इथे Python example दिला)
-#     commands:
-#       - echo "Installing NGINX"
-#       - apt-get update -y
-#       - apt-get install -y nginx
-
-#   build:
-#     commands:
-#       - echo "Build started on $(date)"
-#       - cp index.html /var/www/html/
-
-#   post_build:
-#     commands:
-#       - echo "Configuring NGINX"
-#       - nginx -t     # (configuration check करण्यासाठी)
-      
-
-# artifacts:
-#   files:
-#     - /var/www/html/index.html
-
-
- 
-
-
- 
-
-
 version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      python: 3.9   # (runtime define करणे चांगली पद्धत आहे, इथे Python example दिला)
     commands:
-      - echo "Install phase started"
+      - echo "Installing NGINX"
+      - apt-get update -y
+      - apt-get install -y nginx
+
   build:
     commands:
-      - echo "Build phase started - no build needed for static site"
+      - echo "Build started on $(date)"
+      - cp index.html /var/www/html/
+
+  post_build:
+    commands:
+      - echo "Configuring NGINX"
+      - nginx -t     # (configuration check करण्यासाठी)
+      
 
 artifacts:
   files:
-    - '**/*'
+    - /var/www/html/index.html
+
+
+ 
+
+
+ 
+
+
+# version: 0.2
+
+# phases:
+#   install:
+#     commands:
+#       - echo "Install phase started"
+#   build:
+#     commands:
+#       - echo "Build phase started - no build needed for static site"
+
+# artifacts:
+#   files:
+#     - '**/*'
