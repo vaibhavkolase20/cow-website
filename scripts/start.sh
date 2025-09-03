@@ -1,1 +1,2 @@
-#hi
+sudo systemctl start nginx
+sudo systemctl enable nginx
