@@ -20,7 +20,12 @@
 
       # Enable and start service
       sudo systemctl enable codedeploy-agent
-sudo systemctl start codedeploy-agent
+      sudo systemctl start codedeploy-agent
 
 # Check status
 sudo systemctl status codedeploy-agent
+
+# Restarte Egent
+sudo systemctl restart codedeploy-agent
+sudo systemctl status codedeploy-agent
+
