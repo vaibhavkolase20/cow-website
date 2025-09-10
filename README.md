@@ -25,7 +25,7 @@
 # Check status
 sudo systemctl status codedeploy-agent
 
-# Restarte Egent
+# Restarte Agent
 sudo systemctl restart codedeploy-agent
 sudo systemctl status codedeploy-agent
 
