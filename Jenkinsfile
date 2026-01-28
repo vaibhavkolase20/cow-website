@@ -15,20 +15,11 @@ pipeline {
             }
         }
 
-        stage('Check & Install Docker') {
+        stage('Verify Docker') {
             steps {
                 sh '''
-                if ! command -v docker >/dev/null 2>&1; then
-                  echo "Docker not found. Installing..."
-                  sudo apt update -y
-                  sudo apt install -y docker.io
-                  sudo systemctl start docker
-                  sudo systemctl enable docker
-                  sudo usermod -aG docker ubuntu
-                else
-                  echo "Docker already installed"
-                fi
                 docker --version
+                docker ps
                 '''
             }
         }
@@ -36,8 +27,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                echo "Building Docker image from Dockerfile"
-                sudo docker build -t $IMAGE_NAME .
+                docker build -t $IMAGE_NAME .
                 '''
             }
         }
@@ -45,16 +35,14 @@ pipeline {
         stage('Run Container') {
             steps {
                 sh '''
-                echo "Removing old container if exists"
-                sudo docker rm -f $CONTAINER_NAME || true
+                docker rm -f $CONTAINER_NAME || true
 
-                echo "Running container"
-                sudo docker run -d \
+                docker run -d \
                   --name $CONTAINER_NAME \
                   -p 80:80 \
                   $IMAGE_NAME
 
-                sudo docker ps
+                docker ps
                 '''
             }
         }
