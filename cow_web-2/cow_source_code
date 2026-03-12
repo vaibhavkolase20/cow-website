@@ -1,0 +1,117 @@
+स्टेप १: Killercoda वर K3s इंस्टॉल करा
+Killercoda च्या टर्मिनलमध्ये ही कमांड रन करा, ज्यामुळे तुमचा मिनी कुबेरनेटीस क्लस्टर तयार होईल:
+
+Bash
+curl -sfL https://get.k3s.io | sh -
+# क्लस्टर तयार होईपर्यंत ५-१० सेकंद थांबा
+sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+(आता kubectl get nodes टाईप करून चेक करा की तुमचा नोड Ready आहे का.)
+
+स्टेप २: वेबसाइटचा कोड (HTML) आणि कॉन्फिग तयार करा
+आपण गाईंच्या खऱ्या फोटोंसाठी ConfigMap तयार करू, ज्यामुळे आपल्याला वेगळी इमेज बिल्ड करण्याची गरज पडणार नाही.
+
+nano index.html टाईप करून खालील कोड पेस्ट करा:
+
+HTML
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <title>Save The Cow</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #fdfcf0; color: #333; }
+        .header { background-color: #f39c12; color: white; padding: 20px; border-bottom: 5px solid #e67e22; }
+        .gallery { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; }
+        .card { background: white; margin: 15px; padding: 10px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 320px; }
+        img { width: 100%; border-radius: 10px; height: 220px; object-fit: cover; }
+        .message { font-size: 24px; font-weight: bold; margin: 20px; color: #d35400; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>गायी वाचवा, जीवन वाचवा (Save The Cow)</h1>
+        <p>गाईंचे रक्षण करणे ही आपली जबाबदारी आहे.</p>
+    </div>
+    
+    <div class="message">🙏 देशी गाईंचे संवर्धन करा 🙏</div>
+
+    <div class="gallery">
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1596733430284-f7437764b1a9?q=80&w=800" alt="Indian Cow 1">
+            <p>गिर गाय (Gir Cow)</p>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?q=80&w=800" alt="Indian Cow 2">
+            <p>कापिला गाय</p>
+        </div>
+        <div class="card">
+            <img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?q=80&w=800" alt="Indian Cow 3">
+            <p>नंदी आणि गोमाता</p>
+        </div>
+    </div>
+</body>
+</html>
+(Save करण्यासाठी Ctrl+O, Enter, मग Ctrl+X दाबा.)
+
+स्टेप ३: Kubernetes फाईल्स तयार करा
+१. ConfigMap तयार करा (तुमचा HTML कुबेरनेटीसमध्ये टाकण्यासाठी):
+
+Bash
+kubectl create configmap cow-html --from-file=index.html
+२. Deployment आणि Service तयार करा:
+nano cow-deploy.yaml करा आणि खालील कोड पेस्ट करा:
+
+YAML
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cow-website
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cow-site
+  template:
+    metadata:
+      labels:
+        app: cow-site
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: cow-html
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cow-service
+spec:
+  type: NodePort
+  selector:
+    app: cow-site
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 32000
+स्टेप ४: डिप्लॉयमेंट सुरू करा
+आता ही फाईल रन करा:
+
+Bash
+kubectl apply -f cow-deploy.yaml
+आता तुमचा Pod तयार झाला आहे की नाही हे पाहण्यासाठी:
+kubectl get pods
+
+स्टेप ५: ब्राउझरमध्ये कसे पाहायचे?
+Killercoda च्या वरच्या बाजूला 'Traffic/Ports' मेनूवर क्लिक करा.
+
+तिथे पोर्ट 32000 टाईप करा (कारण आपण NodePort 32000 दिला आहे).
+
+'Access' बटणावर क्लिक करा.
